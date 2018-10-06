@@ -1,15 +1,60 @@
-package lab513_paper_format_convert
+package taggedtxt
 
 import (
 	"bufio"
+	"fmt"
 	"os"
+	"reflect"
 	"strings"
+
+	"github.com/donyori/lab513_paper_format_convert/model"
 )
 
 func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
-	doesTrimSpace bool) (documentRoot *DocumentTreeNode, err error) {
+	doesTrimSpace bool) (documentRoot *model.DocumentTreeNode, err error) {
+	defer func() {
+		if panicErr := recover(); panicErr != nil {
+			documentRoot = nil
+			if e, ok := panicErr.(error); ok {
+				err = e
+			} else {
+				err = fmt.Errorf("%v", panicErr)
+			}
+		}
+	}()
 	if taggedTextInfo == nil {
 		taggedTextInfo = DefaultTaggedTextInfo
+	}
+	titleFromFilename := ""
+	if taggedTextInfo.FilenamePattern != nil {
+		filenameInfo, err := taggedTextInfo.FilenamePattern.Parse(filename)
+		if err != nil {
+			return nil, err
+		}
+		v := reflect.ValueOf(filenameInfo)
+		for v.Kind() == reflect.Ptr {
+			v = v.Elem()
+		}
+		switch v.Kind() {
+		case reflect.Struct:
+			v = v.FieldByName("Title")
+			if v.IsValid() {
+				titleFromFilename = v.String()
+			}
+		case reflect.Map:
+			keys := v.MapKeys()
+			if len(keys) > 0 {
+				for _, k := range keys {
+					if strings.EqualFold(k.String(), "Title") {
+						v = v.MapIndex(k)
+						if v.IsValid() {
+							titleFromFilename = v.String()
+						}
+						break
+					}
+				}
+			}
+		}
 	}
 	file, err := os.Open(filename)
 	if err != nil {
@@ -19,7 +64,7 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 	startTagLength := len(taggedTextInfo.ChapterStartTag)
 	endTagLength := len(taggedTextInfo.ChapterEndTag)
 	scanner := bufio.NewScanner(file)
-	var root, current *DocumentTreeNode
+	var root, current *model.DocumentTreeNode
 	depth := 0
 	for scanner.Scan() {
 		// Process lines:
@@ -32,11 +77,11 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 			continue
 		}
 		if root == nil {
-			title := ""
+			title := titleFromFilename
 			if taggedTextInfo.DoesStartWithTitle {
 				title = line
 			}
-			root, err = NewDocumentTreeNode(Document, title)
+			root, err = model.NewDocumentTreeNode(model.Document, title)
 			if err != nil {
 				return nil, err
 			}
@@ -59,7 +104,8 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 					if i == 1 {
 						content = line[level*startTagLength:]
 					}
-					node, err := NewDocumentTreeNode(Chapter, content)
+					node, err := model.NewDocumentTreeNode(
+						model.Chapter, content)
 					if err != nil {
 						return nil, err
 					}
@@ -71,13 +117,13 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 				}
 			} else {
 				for i := depth - level; i > 0; i-- {
-					current = current.Parent
+					current = current.Parent()
 					if current == nil {
-						return nil, ErrNilDocumentTreeNode
+						return nil, model.ErrNilDocumentTreeNode
 					}
 				}
-				node, err := NewDocumentTreeNode(
-					Chapter, line[level*startTagLength:])
+				node, err := model.NewDocumentTreeNode(
+					model.Chapter, line[level*startTagLength:])
 				if err != nil {
 					return nil, err
 				}
@@ -97,14 +143,14 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 				level++
 			}
 			for i := depth - level; i >= 0; i-- {
-				current = current.Parent
+				current = current.Parent()
 				if current == nil {
-					return nil, ErrNilDocumentTreeNode
+					return nil, model.ErrNilDocumentTreeNode
 				}
 			}
 			depth = level
 		} else {
-			node, err := NewDocumentTreeNode(Paragraph, line)
+			node, err := model.NewDocumentTreeNode(model.Paragraph, line)
 			if err != nil {
 				return nil, err
 			}
