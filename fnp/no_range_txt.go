@@ -9,8 +9,8 @@ import (
 type FilenamePatternNoRangeTxt struct{}
 
 type FilenameInfoNoRangeTxt struct {
-	Directory string
-	Numbers   [2]int32
+	Dir     string
+	Numbers [2]int32
 }
 
 var fpnrtRegexp *regexp.Regexp
@@ -24,7 +24,7 @@ func NewFilenamePatternNoRangeTxt() *FilenamePatternNoRangeTxt {
 }
 
 func (fpnrt *FilenamePatternNoRangeTxt) Parse(filename string) (
-	filenameInfo interface{}, err error) {
+	filenameInfo FilenameInfo, err error) {
 	if fpnrt == nil {
 		return nil, ErrNilFilenamePattern
 	}
@@ -41,13 +41,13 @@ func (fpnrt *FilenamePatternNoRangeTxt) Parse(filename string) (
 		return nil, err
 	}
 	info := &FilenameInfoNoRangeTxt{
-		Directory: dir,
-		Numbers:   [2]int32{no1, no2},
+		Dir:     dir,
+		Numbers: [2]int32{no1, no2},
 	}
 	return info, nil
 }
 
-func (fpnrt *FilenamePatternNoRangeTxt) Format(filenameInfo interface{}) (
+func (fpnrt *FilenamePatternNoRangeTxt) Format(filenameInfo FilenameInfo) (
 	filename string, err error) {
 	if filenameInfo == nil {
 		return "", ErrNilFilenameInfo
@@ -58,5 +58,31 @@ func (fpnrt *FilenamePatternNoRangeTxt) Format(filenameInfo interface{}) (
 	}
 	f := formatNoRange(info.Numbers[0], info.Numbers[1]) + ".txt"
 	f = replaceInvalidFilenameCharacters(f)
-	return filepath.Join(info.Directory, f), nil
+	return filepath.Join(info.Dir, f), nil
+}
+
+func (finrt *FilenameInfoNoRangeTxt) Directory() string {
+	if finrt == nil {
+		return ""
+	}
+	return finrt.Dir
+}
+
+func (finrt *FilenameInfoNoRangeTxt) Number() (number int32, isSupported bool) {
+	if finrt == nil {
+		return 0, true
+	}
+	return finrt.Numbers[0], true
+}
+
+func (finrt *FilenameInfoNoRangeTxt) NumberRange() (
+	numberRange [2]int32, isSupported bool) {
+	if finrt == nil {
+		return [2]int32{0, 0}, true
+	}
+	return finrt.Numbers, true
+}
+
+func (finrt *FilenameInfoNoRangeTxt) Title() (title string, isSupported bool) {
+	return "", false
 }

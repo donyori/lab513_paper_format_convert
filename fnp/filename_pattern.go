@@ -5,8 +5,8 @@ import (
 )
 
 type FilenamePattern interface {
-	Parse(filename string) (filenameInfo interface{}, err error)
-	Format(filenameInfo interface{}) (filename string, err error)
+	Parse(filename string) (filenameInfo FilenameInfo, err error)
+	Format(filenameInfo FilenameInfo) (filename string, err error)
 }
 
 var (

@@ -46,7 +46,7 @@ func TestNoRangeTitleTxtFormat(t *testing.T) {
 	if err != nil {
 		t.Fatal("Error on parse:", err)
 	}
-	(info.(*FilenameInfoNoRangeTitleTxt)).Title = "SuPor: An Environment for AS of Texts in Brazilian Portuguese"
+	(info.(*FilenameInfoNoRangeTitleTxt)).T = "SuPor: An Environment for AS of Texts in Brazilian Portuguese"
 	result, err := fp.Format(info)
 	if err != nil {
 		t.Error(err)

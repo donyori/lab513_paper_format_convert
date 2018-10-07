@@ -10,9 +10,9 @@ import (
 type FilenamePatternNoRangeTitleTxt struct{}
 
 type FilenameInfoNoRangeTitleTxt struct {
-	Directory string
-	Numbers   [2]int32
-	Title     string
+	Dir     string
+	Numbers [2]int32
+	T       string
 }
 
 var fpnrttRegexp *regexp.Regexp
@@ -27,7 +27,7 @@ func NewFilenamePatternNoRangeTitleTxt() *FilenamePatternNoRangeTitleTxt {
 }
 
 func (fpnrtt *FilenamePatternNoRangeTitleTxt) Parse(filename string) (
-	filenameInfo interface{}, err error) {
+	filenameInfo FilenameInfo, err error) {
 	if fpnrtt == nil {
 		return nil, ErrNilFilenamePattern
 	}
@@ -45,14 +45,14 @@ func (fpnrtt *FilenamePatternNoRangeTitleTxt) Parse(filename string) (
 		return nil, err
 	}
 	info := &FilenameInfoNoRangeTitleTxt{
-		Directory: dir,
-		Numbers:   [2]int32{no1, no2},
-		Title:     filename[firstDot+1 : len(filename)-4],
+		Dir:     dir,
+		Numbers: [2]int32{no1, no2},
+		T:       filename[firstDot+1 : len(filename)-4],
 	}
 	return info, nil
 }
 
-func (fpnrtt *FilenamePatternNoRangeTitleTxt) Format(filenameInfo interface{}) (
+func (fpnrtt *FilenamePatternNoRangeTitleTxt) Format(filenameInfo FilenameInfo) (
 	filename string, err error) {
 	if filenameInfo == nil {
 		return "", ErrNilFilenameInfo
@@ -62,7 +62,38 @@ func (fpnrtt *FilenamePatternNoRangeTitleTxt) Format(filenameInfo interface{}) (
 		return "", ErrFilenameInfoNotMatchPattern
 	}
 	f := fmt.Sprintf("%s.%s.txt",
-		formatNoRange(info.Numbers[0], info.Numbers[1]), info.Title)
+		formatNoRange(info.Numbers[0], info.Numbers[1]), info.T)
 	f = replaceInvalidFilenameCharacters(f)
-	return filepath.Join(info.Directory, f), nil
+	return filepath.Join(info.Dir, f), nil
+}
+
+func (finrtt *FilenameInfoNoRangeTitleTxt) Directory() string {
+	if finrtt == nil {
+		return ""
+	}
+	return finrtt.Dir
+}
+
+func (finrtt *FilenameInfoNoRangeTitleTxt) Number() (
+	number int32, isSupported bool) {
+	if finrtt == nil {
+		return 0, true
+	}
+	return finrtt.Numbers[0], true
+}
+
+func (finrtt *FilenameInfoNoRangeTitleTxt) NumberRange() (
+	numberRange [2]int32, isSupported bool) {
+	if finrtt == nil {
+		return [2]int32{0, 0}, true
+	}
+	return finrtt.Numbers, true
+}
+
+func (finrtt *FilenameInfoNoRangeTitleTxt) Title() (
+	title string, isSupported bool) {
+	if finrtt == nil {
+		return "", true
+	}
+	return finrtt.T, true
 }

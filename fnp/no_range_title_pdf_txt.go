@@ -23,7 +23,7 @@ func NewFilenamePatternNoRangeTitlePdfTxt() *FilenamePatternNoRangeTitlePdfTxt {
 }
 
 func (fpnrtpt *FilenamePatternNoRangeTitlePdfTxt) Parse(filename string) (
-	filenameInfo interface{}, err error) {
+	filenameInfo FilenameInfo, err error) {
 	if fpnrtpt == nil {
 		return nil, ErrNilFilenamePattern
 	}
@@ -41,15 +41,15 @@ func (fpnrtpt *FilenamePatternNoRangeTitlePdfTxt) Parse(filename string) (
 		return nil, err
 	}
 	info := &FilenameInfoNoRangeTitlePdfTxt{
-		Directory: dir,
-		Numbers:   [2]int32{no1, no2},
-		Title:     filename[firstDot+1 : len(filename)-8],
+		Dir:     dir,
+		Numbers: [2]int32{no1, no2},
+		T:       filename[firstDot+1 : len(filename)-8],
 	}
 	return info, nil
 }
 
 func (fpnrtpt *FilenamePatternNoRangeTitlePdfTxt) Format(
-	filenameInfo interface{}) (filename string, err error) {
+	filenameInfo FilenameInfo) (filename string, err error) {
 	if filenameInfo == nil {
 		return "", ErrNilFilenameInfo
 	}
@@ -58,7 +58,38 @@ func (fpnrtpt *FilenamePatternNoRangeTitlePdfTxt) Format(
 		return "", ErrFilenameInfoNotMatchPattern
 	}
 	f := fmt.Sprintf("%s.%s.pdf.txt",
-		formatNoRange(info.Numbers[0], info.Numbers[1]), info.Title)
+		formatNoRange(info.Numbers[0], info.Numbers[1]), info.T)
 	f = replaceInvalidFilenameCharacters(f)
-	return filepath.Join(info.Directory, f), nil
+	return filepath.Join(info.Dir, f), nil
+}
+
+func (finrtpt *FilenameInfoNoRangeTitlePdfTxt) Directory() string {
+	if finrtpt == nil {
+		return ""
+	}
+	return finrtpt.Dir
+}
+
+func (finrtpt *FilenameInfoNoRangeTitlePdfTxt) Number() (
+	number int32, isSupported bool) {
+	if finrtpt == nil {
+		return 0, true
+	}
+	return finrtpt.Numbers[0], true
+}
+
+func (finrtpt *FilenameInfoNoRangeTitlePdfTxt) NumberRange() (
+	numberRange [2]int32, isSupported bool) {
+	if finrtpt == nil {
+		return [2]int32{0, 0}, true
+	}
+	return finrtpt.Numbers, true
+}
+
+func (finrtpt *FilenameInfoNoRangeTitlePdfTxt) Title() (
+	title string, isSupported bool) {
+	if finrtpt == nil {
+		return "", true
+	}
+	return finrtpt.T, true
 }
