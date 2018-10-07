@@ -19,7 +19,7 @@ var fpnrttRegexp *regexp.Regexp
 
 func init() {
 	fpnrttRegexp = regexp.MustCompile(
-		"^[[:digit:]]+(\\-[[:digit:]]+)??\\..+\\.txt$")
+		`^[[:digit:]]+(\-[[:digit:]]+)??\..+\.txt$`)
 }
 
 func NewFilenamePatternNoRangeTitleTxt() *FilenamePatternNoRangeTitleTxt {
@@ -63,5 +63,6 @@ func (fpnrtt *FilenamePatternNoRangeTitleTxt) Format(filenameInfo interface{}) (
 	}
 	f := fmt.Sprintf("%s.%s.txt",
 		formatNoRange(info.Numbers[0], info.Numbers[1]), info.Title)
+	f = replaceInvalidFilenameCharacters(f)
 	return filepath.Join(info.Directory, f), nil
 }

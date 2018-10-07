@@ -1,6 +1,8 @@
 package fnp
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -29,4 +31,25 @@ func TestNoRangeTitleTxtParse(t *testing.T) {
 			t.Logf("%+v", *fi)
 		}
 	}
+}
+
+func TestNoRangeTitleTxtFormat(t *testing.T) {
+	goPath := os.Getenv("GOPATH")
+	if goPath == "" {
+		t.Fatal("Cannot get GOPATH.")
+	}
+	filename := filepath.Join(goPath, "src", "github.com",
+		"donyori", "lab513_paper_format_convert", "test_resource",
+		"134.SuPor An Environment for AS of Texts in Brazilian Portuguese.txt")
+	fp := new(FilenamePatternNoRangeTitleTxt)
+	info, err := fp.Parse(filename)
+	if err != nil {
+		t.Fatal("Error on parse:", err)
+	}
+	(info.(*FilenameInfoNoRangeTitleTxt)).Title = "SuPor: An Environment for AS of Texts in Brazilian Portuguese"
+	result, err := fp.Format(info)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log("Format result:", result)
 }

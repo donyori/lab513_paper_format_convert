@@ -2,9 +2,16 @@ package fnp
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
+
+var invalidFilenameCharacterPattern *regexp.Regexp
+
+func init() {
+	invalidFilenameCharacterPattern = regexp.MustCompile(`[/<>:"\\\|\?\*]`)
+}
 
 func parseNoRange(noRangeString string) (number1, number2 int32, err error) {
 	idx := strings.IndexRune(noRangeString, '-')
@@ -38,4 +45,9 @@ func formatNoRange(number1, number2 int32) string {
 	} else {
 		return fmt.Sprintf("%d-%d", number1, number2)
 	}
+}
+
+func replaceInvalidFilenameCharacters(filename string) string {
+	return invalidFilenameCharacterPattern.ReplaceAllLiteralString(
+		filename, "_")
 }

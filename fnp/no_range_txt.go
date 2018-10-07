@@ -16,7 +16,7 @@ type FilenameInfoNoRangeTxt struct {
 var fpnrtRegexp *regexp.Regexp
 
 func init() {
-	fpnrtRegexp = regexp.MustCompile("^[[:digit:]]+(\\-[[:digit:]]+)??\\.txt$")
+	fpnrtRegexp = regexp.MustCompile(`^[[:digit:]]+(\-[[:digit:]]+)??\.txt$`)
 }
 
 func NewFilenamePatternNoRangeTxt() *FilenamePatternNoRangeTxt {
@@ -57,5 +57,6 @@ func (fpnrt *FilenamePatternNoRangeTxt) Format(filenameInfo interface{}) (
 		return "", ErrFilenameInfoNotMatchPattern
 	}
 	f := formatNoRange(info.Numbers[0], info.Numbers[1]) + ".txt"
+	f = replaceInvalidFilenameCharacters(f)
 	return filepath.Join(info.Directory, f), nil
 }
