@@ -52,8 +52,8 @@ func (fpnrtt *FilenamePatternNoRangeTitleTxt) Parse(filename string) (
 	return info, nil
 }
 
-func (fpnrtt *FilenamePatternNoRangeTitleTxt) Format(filenameInfo FilenameInfo) (
-	filename string, err error) {
+func (fpnrtt *FilenamePatternNoRangeTitleTxt) Format(
+	filenameInfo FilenameInfo) (filename string, err error) {
 	if filenameInfo == nil {
 		return "", ErrNilFilenameInfo
 	}

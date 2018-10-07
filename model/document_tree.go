@@ -32,6 +32,7 @@ var (
 		"DocumentTreeNode has no parent")
 	ErrDocumentTreeNodeChildLevelHigherThanParent error = errors.New(
 		"child's level is higher than parent's level")
+	ErrNoNextDocumentTreeNode error = errors.New("no next DocumentTreeNode")
 
 	dtnkStrings = [...]string{
 		"Document",
@@ -116,6 +117,26 @@ func (dtn *DocumentTreeNode) Content() string {
 		return ""
 	}
 	return dtn.content
+}
+
+func (dtn *DocumentTreeNode) Next() (
+	node *DocumentTreeNode, deltaLevel int, err error) {
+	if dtn == nil {
+		return nil, 0, ErrNilDocumentTreeNode
+	}
+	if dtn.firstChild != nil {
+		return dtn.firstChild, 1, nil
+	}
+	n := dtn
+	deltaLevel = 0
+	for n != nil && n.sibling == nil {
+		n = n.parent
+		deltaLevel--
+	}
+	if n == nil {
+		return nil, 0, ErrNoNextDocumentTreeNode
+	}
+	return n.sibling, deltaLevel, nil
 }
 
 func (dtn *DocumentTreeNode) SetContent(content string) error {

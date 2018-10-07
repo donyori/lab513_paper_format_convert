@@ -37,15 +37,22 @@ func TestLoadTaggedTextFile(t *testing.T) {
 	}
 	for i, c := range cases {
 		f := filepath.Join(dir, c.Filename)
-		root, err := LoadTaggedTextFile(f, c.TTI, true)
+		docModel, err := LoadTaggedTextFile(f, c.TTI, true)
 		t.Log(i)
 		if err != nil {
 			t.Error(err)
 		}
-		if root != nil {
+		if docModel != nil {
+			root := docModel.Root()
 			children := root.Children()
+			t.Log("Number:", docModel.Number())
 			t.Log("Title:", root.Content())
 			t.Log("1 level chapter:")
+			for _, child := range children {
+				t.Log("    ", child.Content())
+			}
+			children = children[0].Children()
+			t.Log("2 level nodes:")
 			for _, child := range children {
 				t.Log("    ", child.Content())
 			}

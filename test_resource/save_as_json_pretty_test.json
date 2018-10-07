@@ -1,0 +1,346 @@
+{
+    "number": 134,
+    "title": "SuPor: An Environment for AS of Texts in Brazilian Portuguese",
+    "content": [
+        {
+            "kind": "Chapter",
+            "title": "Abstract",
+            "content": [
+                {
+                    "kind": "Paragraph",
+                    "content": "This paper presents SuPor, an environment for extractive Automatic Summarization of texts written in Brazilian Portuguese, which can be explored by a specialist on AS to select promising strategic features for extraction. By combining any number of features, SuPor actually entitles one to investigate the performance of distinct AS systems and identify which groups of features are more adequate for Brazilian Portuguese. One of its systems has outperformed six other extractive summarizers, signaling a significant grouping of features, as shown in this paper."
+                }
+            ]
+        },
+        {
+            "kind": "Chapter",
+            "title": "1\tIntroduction",
+            "content": [
+                {
+                    "kind": "Paragraph",
+                    "content": "The present work combines classical (e.g., [14]; [5]) and novel approaches (e.g., [2]) to AS of English texts, in order to investigate which features can contribute best to summarize texts in BP. Specific BP resources were used, namely, electronic dictionaries, a lexicon, and a thesaurus (see, for example, [20], [6], and [4]), added to BP-driven tools, such as a parser [17], a part-of-speech tagger [1], a stemmer [3], and a sentencer. These allowed us to devise AS extractive systems to explore more thoroughly the AS of texts in BP. So far, texts under consideration are genre-specific. Summarization strategies focus upon both linguistic and non-linguistic constraints, in a multifaceted environment that allows the user to choose distinct summarization features. Once customized, the environment, hereafter named SuPor (an environment for automatic SU mmarization of texts in PORtuguese) [19], is ready to produce as many extracts to the same input as the user wishes, through distinct compression rates. By diversifying the groups of selected features, distinct AS strategies may be considered, which allow analyzing which features grouping apply better to the extraction of text units from texts in Brazilian Portuguese. Like other proposed methodologies, SuPor aims at identifying text units that are sufficiently relevant to compose an extract. Unlike them, it allows the user to quite freely set which combination of features s/he intends to explore for AS. Henceforth, summaries automatically generated are named extracts after the extractive methodology, i.e., the copy-and-paste of text units considered relevant to include in a summary [16]."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "In Section 2 we briefly describe the approaches for English that have been incorporated into SuPor. The distinctive ways to generate extracts are described in Section 3. Preliminary evaluations, described in Section 4, indicate promising combinations of features to summarize texts in BP. Final remarks are presented in Section 5."
+                }
+            ]
+        },
+        {
+            "kind": "Chapter",
+            "title": "2\tExtractive Approaches Incorporated to SuPor",
+            "content": [
+                {
+                    "kind": "Paragraph",
+                    "content": "SuPor considers four extractive methods explored for the English language, hereafter named the ‘Classifier’ [11], which combines corpora-based features, the ‘Lexical Chains Method’ [2], which computes connectedness between words, the ‘Relationship Map Method’ [29], which performs similarly to the previous one, but considering paragraphs instead, and the ‘Importance of Topics Method’ [12], which identifies important topics of a source text."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "The Classifier Method uses a Bayesian classifier to train the system in recognizing relevant features. These include the sentence length, limited to 5 words the minimum; the words frequency; signaling nouns; sentence or paragraph location; and the occurrence of proper nouns. The last three features have been firstly addressed by Edmundson [5]. As a result of the training phase, a probabilistic distribution is produced to allow the automatic summarizer to select sentences through the certified features."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "The Lexical Chains Method computes lexical cohesion through several maps of word correlations, considering only nouns as basic significant units of a source text. They follow [9, 7] in that strong lexical chains are those whose semantic relationship is more expressive. To compute lexical chaining, an ontology and the WordNet [18] are used to identify the lexical chaining mechanisms of cohesion (synonymy/antonym, hiperonimy/hiponimy, etc.), resulting in a set of strongly correlated words. Three diverse summarization heuristics may be applied to select sentences to include in an extract based on lexical chaining. The 1st heuristics selects every sentence S of the source text based upon each member M of every strong lexical chain of the set formerly computed. S is the sentence that contains the 1st occurrence of M. The 2nd heuristics applies the former one only to representative members of a strong lexical chain. A representative member of a lexical chain is that whose frequency is greater than the average frequency of all the words in the chain. Finally, the 3rd heuristics is based upon the representativeness of a given strong lexical chain in every topic of the source text."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "The Relationship Map Method focuses on three distinct ways of interconnecting paragraphs, to build maps of correlated text units, yielding the following paths: the dense or bushy, the deep, and the segmented ones. Dense paths are those with more connections in the map. To build them, top-ranked paragraphs are chosen totally independent from each other. Because of this, texture (i.e., cohesion and coherence) is not guaranteed. Trying to overcome this, the deep path focuses on paragraphs that are semantically inter-related. However, a unique topic may be conveyed in the extract which may not be the main topic of the source text. The segmented bushy path aims at overcoming the bottlenecks of the former methods by addressing distinct topics of the source text."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "Finally, the Importance of Topics Method is based upon the so-called TF-ISF, or Term Frequency-Inverse Sentence Frequency measure, which identifies sentences that may uniquely convey relevant topics to include in the extract. Topics are delimited by the Text Tiling algorithm [8]."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "Besides the methods variations themselves, the following differences are observed:"
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "(a)\tthe Classifier is the only one that depends on genre and domain, because it requires training on corpora of texts; (b) the Lexical Chains one is the only one that does not allow a compression rate to be specified, because it is the heuristic that determines the number of extract sentences and not the user; (c) the Relationship Map method is the only one that deals with paragraphs, instead of sentences, as minimal units. Preprocessing applies to all of them, aiming at producing the source texts internal representation. However, distinct tools are used, as follows (methods that embed them are pinpointed between brackets): stopwords removal (all but Lexical Chaining), stemming (Relationship Map and Importance of Topics), segmenting (all), tagging and parsing (only Lexical Chaining), and 4-grams extraction (only Importance of Topics). This is used for Romance languages, if no stemming is available."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "The Lexical Chains Method is the most costly, since it depends on sophisticated linguistic resources. Actually, this is the only method that has been significantly modified for Brazilian Portuguese: for the lack of an ontology and a WordNet for BP, its implementation to BP in SuPor uses a thesaurus instead [4]. Other minor adaptations of the referred methods to SuPor have been made, which are detailed in Section 3."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "Our selection of these models has been limited, on one hand, to the already available linguistic resources at NILC1 and, on the other hand, to their portability to BP. Promising aspects of such methods included the following: a) in the Classifier Method, metrics for AS can be made available through training and the automatic summarizer may be modeled upon relevant corpora-based features; b) focusing on expressive relationships between lexical items, the Lexical Chains Method increases the chance of selecting sentences better; c) similarly to the previous one, both the Relationship Map and Importance of Topics methods target more coherence in focusing upon the interconnectedness of the topics of a source text. However, the latter innovates in using text tiling to determine the relevant ones."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "Problematic aspects of those approaches are still common to most of the existing AS proposals. They refer, for example, to a) the need to have a corpus of ideal summaries2 for training the Classifier; b) the need to provide specific, domain-dependent, information repositories, such as the list of signaling and proper nouns for the Classifier or the lexicon and the ontology for the Lexical Chains Method, added to taggers and parsers; c) the costly implementation of sophisticated methods, such as the Lexical Chains one. However struggling those aspects may be, SuPor ultimately aims at certifying that linguistic information helps producing more satisfactory output extracts with respect to both, information reproduction and coherence. We should notice, though, that the only property addressed in this paper is content selection, and not coherence."
+                }
+            ]
+        },
+        {
+            "kind": "Chapter",
+            "title": "3\tSuPor Architecture",
+            "content": [
+                {
+                    "kind": "Paragraph",
+                    "content": "SuPor comprises training (Figure 1) and extraction (Figure 2)3. During training, each feature is weighed by measuring its representativeness in both the source texts and their corresponding ideal extracts. These have been built by correlating each sentence of authentic, manually produced, summaries with those sentences of the corresponding source texts. The manual summaries have been built by a professional summarizer. Correlations are based on the cosine similarity measure [30]. Relevant features for AS are pointed out through training, yielding a probabilistic distribution. This signals the probability of a given feature to occur in both texts, as in Kupiec et al.’s approach [11]."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "After training, the specialized user can customize SuPor to summarize any source text by (a) pinpointing the way the source text must be preprocessed (either removing stopwords and stemming what remains, or producing a 4-gram distribution); (b) selecting the group of features that will drive summarization; and (c) specifying the compression rate. These options are indicated in the user interface in Figure 2. The main features of the extraction module are detailed below."
+                },
+                {
+                    "kind": "Chapter",
+                    "title": "3.1\tFeatures Selection",
+                    "content": [
+                        {
+                            "kind": "Paragraph",
+                            "content": "Features selection is actually at the core of SuPor, since it allows for distinct AS strategies to be used. Through them, the strategies may address either non-linguistic or linguistic knowledge. The former includes those used in the Classifier Method, i.e., sentence length, proper names, location of sentences in a paragraph and location of a paragraph in the text, and keywords (i.e., the words frequency). As originally proposed in that method for texts in English, only initial and final paragraphs of a source text and sentences of a paragraph (with a minimum of 2 sentences) are selected by SuPor."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "Linguistic knowledge is embedded in SuPor through the manipulation of surface indicators of linguistically related information, such as those that link paragraphs, lexical chaining, or determining topics. Trying to overcome the connectedness problems introduced by the reused methods, in some cases we introduce some changes on them. For example, for the Relationship Map method, all the paths are calculated and all the resulting paragraphs are incorporated in just one extract. Oppositely, the Importance of Topics method has been fully embedded in SuPor. Similarly to the Lexical Chains Method, SuPor focuses on a single, or on the most nuclear, noun, when a noun compound is focused upon. However, differently from English, the corresponding Brazilian Portuguese chains to the noun compounds are actually chains of adjectives as modifiers of only one noun. So, determining their nuclei is simpler than it is in English: it is enough to use NILC’s tagger [1]. Strong lexical chains are determined by counting the number of words and the number of their repetitions in the source text. The heuristics of the original method have also been incorporated in SuPor, to build just one extract."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "The Classifier Method is not explicit in Figure 2. Instead, it is depicted by selecting features 2 to 5. In all, SuPor embeds the seven features outlined in the box ‘Feature selection’ in Figure 2."
+                        }
+                    ]
+                },
+                {
+                    "kind": "Chapter",
+                    "title": "3.2\tLinguistic and Empirical Resources",
+                    "content": [
+                        {
+                            "kind": "Paragraph",
+                            "content": "SuPor BP-oriented linguistic resources include a stoplist, a lexicon [20], and a thesaurus [4]. Added to these, the probabilistic distribution resulting from training is the most important empirical resource in SuPor. As mentioned before, SuPor generic tools (i.e., the text segmenter, the stemmer, and the tagger) do not necessarily run altogether. Their activation depends on the preprocessing option and on the group of features selected by the user. Text segmentation focuses on splitting the source text into sentences by applying simple rules based on punctuation marks. Paragraphs are also marked. The BP stemmer [3] is an adaptation of Porter’s algorithm [25], accounting for irregular verb forms and noun and verb suffixation in BP. Since 4-gramming has been indicated as a substitute for stemming for BP [12], the user may also choose between both preprocessing options, to produce the source text internal vector. The tagger has been trained for BP under the generic tagset defined by Ratnaparkhi [27]."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "By customizing SuPor, the user may delineate the AS strategy, the granularity of text segmenting (either paragraphs or sentences), and the compression rate. The relevant text units can then be classified, to produce an extract. This is done in the following way: firstly, every sentence that presents at least one of the features of the selected group is considered; secondly, sentences are classified according to their likelihood of being included in the extract. Likelihood is signaled by the probabilistic distribution of features resulting from training. Considering preprocessing and extraction options, SuPor amounts to 348 diverse summarization strategies."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "kind": "Chapter",
+            "title": "4\tAssessment of the SuPor Strategies",
+            "content": [
+                {
+                    "kind": "Paragraph",
+                    "content": "SuPor strategies have been assessed in a small corpus, from which the strategies with better performance are inferred. Then, one of its strategies was compared to other extractive summarizers. Both experiments have been carried out in a blackbox way, i.e., by computing measures only on the produced extracts. A brief description of them is given below."
+                },
+                {
+                    "kind": "Chapter",
+                    "title": "4.1\tInformativeness and Features Representativeness",
+                    "content": [
+                        {
+                            "kind": "Paragraph",
+                            "content": "The assessment described here was limited to measuring the degree of informativeness of SuPor extracts. In doing that, we could also assess the representativeness of both the selected features and preprocessing options. So, we compared distinct features groupings to identify those leading to better results in summarizing BP texts. The test corpus included 51 newspaper articles (ca. 1 to 3 pages long) of varied domains. They were chosen for their small size and readership coverage, in order to ease both the tasks of hand-building reference summaries and evaluating the output extracts. The test corpus was also used for training. For this reason, 5-fold cross-validation was used."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "Two experiments were carried out for similarity: in the first, the output extracts were compared with ideal extracts; in the second, they were compared with ideal summaries instead. Every condensed text was obtained on a ca. 28% compression rate (and is, therefore, ca. 8 sentences long). Ideal extracts are those automatically generated by an automatic generator of ideal extracts.4 Ideal summaries are those hand-built by BP fluent writers and, thus, result from a rewriting task. Only co-selection measures [26] were used, namely, precision (P), recall (R), and the balanced F-measure (F). P is the ratio between the number of relevant sentences included in the output extract and its total number of sentences. R is the ratio between the same number of relevant sentences and the total number of sentences in the ideal reference (either extracts or summaries). In the first experiment, those measures were computed in a Boolean fashion (i.e., presence or absence of sentences of the output extract in the corresponding ideal extract). Hereafter, this procedure is named sentence co-selection. In the second, they were calculated through a comparison of the output extract and its corresponding ideal summary. This procedure is named content-based similarity."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "To overcome the impossibility of pairing sentences in the second experiment, each sentence of the output extract was compared with all the sentences of the ideal summary, as suggested by Mani [15], through a variation of the cosine similarity measure."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "Finally, to compute P and R for content-based similarity, the obtained values were normalized to the interval [0,1] (most similar equals 1). After computing those for the full collection of extracts, average measures were produced for the 348 features groupings (FGs) provided by SuPor (amounting to 17.748 extracts). The most significant figures are shown in Table 1, along with their rankings in the whole collection."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "The features groupings with the biggest, and equal, F-measures in the sentence co-selection procedure are FG1=[lexical chaining, sentence length, proper nouns] and FG2=[lexical chaining, sentence length, words frequency], both running under the 4-grams preprocessing option. In the content-based similarity procedure, the best grouping was FG3=[lexical chaining, relationship map], signaling that the combination of the two full methods, Lexical Chaining and the Relationship Map one, applied better to the test corpus. In this case, preprocessing options differed: Lexical Chaining ran on text tiling and the Relationship Map Method, on 4-gramming."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "By comparing FG1 with FG2, we can see that extracting sentences based upon proper nouns or words frequency makes no difference in content selection. However, performance based upon proper nouns was slightly better in the second procedure. This may indicate that SuPor performs closer to ideal summaries when proper nouns are focused upon, instead of words frequency. With respect to using any of the varied features along lexical chaining, the comparison between FG1 and FG3 shows that the Relationship Map Method still outperforms them in the second experiment. After all, it is worth noticing that both the Lexical Chains and Relationship Map methods use the connectedness between text units to indicate the relevant ones. The fact that the latter uses paragraphs instead of sentences may be significant in improving performance. Overall, it is noticeable that, although 7 features were available in SuPor, the inclusion of other features to any of the topmost groupings did not provide a significant performance improvement. Additionally, it did not deteriorate the results either. So, the best results indicate that those strategies that comprised only 3 out of 7 features should be better explored."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "In both experiments lexical chaining was based on text tiling at the preprocessing stage. It was also the commonest feature in the great majority of the topmost features groupings and the least common in those groupings with the smallest F-measures. The least representative feature was ‘Importance of topics’: it appears in most of the worst figures and is absent in the best ones. This lack of representativeness may be due to the size of the source texts: for being small, proper identification of their topics could have been damaged. In other words, just one topic may be chosen, which does not convey the important ones. The fluency of news texts may also imply that topic change is too subtle for automatic detection."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "Preprocessing by paragraphing or text tiling evenly influenced the figures in both experiments. However, text tiling showed a slight improvement in SuPor performance. Input stemming or 4-gramming resulted differently, though: in sentence co-selection, the preprocessing mode is not relevant; in content-based similarity, 4-gramming yielded better results for BP. Recall measures are smaller than precision ones in both experiments, but in the second one, they slightly outperform the first. This may indicate that, in comparing output extracts with ideal summaries, instead of comparing them with ideal extracts, more sentences are considered similar. However, more experiments are needed to confirm this finding."
+                        }
+                    ]
+                },
+                {
+                    "kind": "Chapter",
+                    "title": "4.2\tComparing Just One Strategy with Other Extractive Summarizers",
+                    "content": [
+                        {
+                            "kind": "Paragraph",
+                            "content": "Based on the former experiment, only one strategy of SuPor was chosen for a more thorough comparison with other six systems, as reported in [28], combining the following features: location (of sentences in a paragraph and of a paragraph in the text), words frequency, sentence length, proper nouns, and lexical chaining.. The systems considered are the following (a brief description on how they identify sentences to include in an extract is given): (1) TF-ISF-Summ (Term Frequency-Inverse Sentence Frequency-based Summarizer) [12], which mirrors Salton’s TF-IDF information retrieval measure [30] in its pulling out documents from a collection, but correspondingly considering sentences from a single source text; (2) NeuralSumm (Neural Summarizer) [23], which is driven by an unsupervised neural network for sentence determination, based on a self-organizing map (SOM) [10]; (3) GistSumm (Gist Summarizer) [22], which matches lexical items of the source text against lexical items of its gist sentence; finally, (4) ClassSumm [13], which is also a classification-based summarizer, like Kupiec et al.’s one, which is embedded in SuPor. Added to those, the baseline from-top sentences and random-based systems were used."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "Location was the only feature included in SuPor summarizer that was not representative in the former evaluation. It was considered because it is a common feature to 3 out of the 6 other systems. The experiment was carried out in a blackbox fashion on a single, distinct from the former, test corpus [24]. This comprises 100 newspaper texts, paired with hand-produced summaries written by a consultant on the Brazilian Portuguese language. For this reason, they were considered our corpus of ideal summaries. Similarly to the former experiment, a 10-fold cross validation was used, under a 30% compression rate (approximated to the ideal summaries and extracts)."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "Run independently, the systems performances were also assessed similarly to the former experiment: average precision, recall and F-measures were obtained automatically. As shown in Table 2, SuPor summarizer outperformed the other systems, having a ca. 0.38 f-measure over the baseline random and a 0.43 f-measure when comparing absolute average performances."
+                        },
+                        {
+                            "kind": "Paragraph",
+                            "content": "Although a distinct, and bigger, test corpus was used in this experiment and location was considered, there was no improvement in SuPor performance, when compared to the former experiment. However, the figures show that the selected features make it close to the performance of ClassSumm, which is also a classification system. This may not be surprising, because both systems are based on a Bayesian classifier. However, ClassSumm uses a total of 16 features associated to each sentence. It should be interesting to investigate, thus, if SuPor performance is representative enough of the lack of improvement of AS strategies when more features are added."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "kind": "Chapter",
+            "title": "5\tFinal Remarks",
+            "content": [
+                {
+                    "kind": "Paragraph",
+                    "content": "The reported experiment showed that, of the five features, SuPor summarizer is distinctive on its lexical chaining (this is the only feature that differentiates it from the other systems). This confirms the first experiment. However, the features grouping, itself, should be better analyzed, for results may improve because of the combination of each component of such a grouping. With respect to combining features, SuPor provides a meaningful environment for the user to explore empirical measures to determine the relevance of text units, as both experiments show. Although the Bayesian classifier by Kupiec et al. also incorporates a combination of features, SuPor goes one step further in allowing any number of features to be chosen out of the seven largely considered in the field nowadays. However, SuPor usability has not yet been assessed. One of the reasons is that it offers too many summarizing possibilities. A more productive strategy is to limit it to just the most promising features groupings, in order to carry out more comprehensive tests. Besides, to make better use of SuPor, more people should be available to work with it. There should be no trouble in this, from the user viewpoint, for it runs in a pretty friendly, Windows-based platform. The problem rests in the expertise level of the user: the more specialist the user on AS features, the more directly or deeply s/he could assess the influence of linguistic features in the production of the extracts. This is one of the most interesting aspects provided by SuPor: to select, for example, only non-linguistic features and run it. Then, running it only on the linguistic ones, in order to compare the results obtained through both groups of features. Actually, our preliminary assessments showed that considering linguistic features (such as lexical chaining and relationships mapping) outperforms the results produced when considering only non-linguistic ones."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "Even though the comparative analysis has been made on a very small corpus, the results are promising. SuPor exploration may well end up as a means to specify a useful benchmark comparison to the field. So far, we have no knowledge of the existence of similar environments. CAST [21] seems to be the closer to SuPor one can get: it also considers a set of features, including lexical cohesion [9], but it aims at giving support to human summarizers instead of providing the means to deeply explore distinct summarizing strategies and their potential combinations. Clearly, CAST writers could not assess AS strategies from the viewpoint of research and development of AS systems, as it is intended in SuPor. So, it would be interesting to put together CAST and SuPor environments, to complement each other: CAST allows registering feedback from the writer, annotating important sentences signaled by its distinct summarization methods, and comparing results. By running SuPor on common corpora to CAST, its results could be thus compared to information obtained through CAST registers. Also, similar experiments to the ones reported above could be carried out involving both CAST and SuPor. In order to do so, CAST should be also assessed as a summarizing tool. To our knowledge, this has not been done so far, which makes SuPor assessment yet more useful. However, in considering CAST and SuPor altogether, common NL-dependent resources must be provided."
+                }
+            ]
+        },
+        {
+            "kind": "Chapter",
+            "title": "Acknowledgments",
+            "content": [
+                {
+                    "kind": "Paragraph",
+                    "content": "This work has been partly supported by the Brazilian agency FAPESP."
+                }
+            ]
+        },
+        {
+            "kind": "Chapter",
+            "title": "References",
+            "content": [
+                {
+                    "kind": "Paragraph",
+                    "content": "[1]\tAires, R.V.X.; Aluísio, S.M.; Kuhn, D.C.S.; Andreeta, M.L.B.; Oliveira Jr., O.N. (2000). Combining Multiple Classifiers to Improve Part of Speech Tagging: A Case Study for Brazilian Portuguese. In the Proc. of the Brazilian Symposium on Artificial Intelligence. Atibaia – SP, Brasil."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[2]\tBarzilay, R. and Elhadad, M. (1997). Using Lexical Chains for Text Summarization. In the Proc. of the Intelligent Scalable Text Summarization Workshop, Madri, Spain. Also In I. Mani and M.T. Maybury (eds.), Advances in Automatic Text Summarization. MIT Press, pp. 111-121, 1999."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[3]\tCaldas Junior, J.; Imamura, C.Y.M.; Rezende, S.O. (2001). Avaliação de um algoritmo de Stemming para a Língua Portuguesa. In Proceedings of the 2nd Congress of Logic Applied to Technology – LABTEC’2001, Vol. II, pp. 267-274. Faculdade SENAC de Ciências Exatas e Tecnologia, São Paulo, Brasil."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[4]\tDias-da-Silva, B.C.; Oliveira, M.F.; Moraes, H. R.; Paschoalino, C.; Hasegawa, R.; Amorin, D.; Nascimento, A. C. (2000). Construção de um Thesaurus Eletrônico para o Português do Brasil. In Proceedings of the V Encontro para o Processamento Computacional da Língua Portuguesa Escrita e Falada (PROPOR 2000), pp. 1-11. Atibaia– SP."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[5]\tEdmundson, H.P. (1969). New Methods in Automatic Extracting. Journal for Computing Machinery 16(2), pp. 264-285."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[6]\tGreghi, J.G.; Martins, R.T.; Nunes, M.G.V. (2002). Diadorim: a Lexical database for Brazilian Portuguese In Manuel G. Rodríguez and Carmem P. S. Araujo (Eds.), Proceedings of the Third International Conference on Language Resources and Evaluation LREC 2002, Vol. IV, pp. 1346-1350. Las Palmas."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[7]\tHalliday, M. A.K.; Hasan, R. (1976). Cohesion in English. Longman."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[8]\tHearst, M.A. (1993). TextTiling: A Quantitative Approach to Discourse Segmentation. Technical Report 93/24. University of California, Berkeley."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[9]\tHoey, M. (1991). Patterns of Lexis in Text. Oxford University Press."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[10]\tKohonen, T. (1982). Self-organized formation of topologically correct feature maps. Biological Cybernetics, Vol. 43, pp. 59-69."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[11]\tKupiec, J.; Petersen, J.; Chen, F. (1995). A trainable document summarizer. In Edward A. Fox, Peter Ingwersen, and Raya Fidel (Eds.), Proceedings of the 18th Annual International ACM-SIGIR Conference on Research and Development in Information Retrieval, pp. 68-73, Seattle, WA. EUA. July."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[12]\tLarocca Neto, J.; Santos, A.D.; Kaestner, A.A.; Freitas, A.A. (2000). Document clustering and text summarization. In the Proceedings of the 4th Int. Conf. on Practical Applications of Knowledge Discovery and Data Mining (PADD-2000), pp. 41-55. London."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[13]\tLarocca Neto, J.; Freitas, A.A.; Kaestner, C.A. (2002). Automatic Text Summarization using a ML Approach. In the Proc. of the XVI Brazilian Symposium on Artificial Intelligence, Lecture Notes on Compute Science, No. 2507, pp. 205-215."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[14]\tLuhn, H.P. (1958). The Automatic Creation of Literature Abstracts. IBM Journal of Research and Development 2(2), pp. 159-165."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[15]\tMani, I. (2001). Automatic Summarization. John Benjamin’s Publishing Company. USA."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[16]\tMani, I.; Maybury, M.T. (1999), eds., Advances in automatic text summarization. MIT Press, Cambridge, MA."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[17]\tMartins, R.T.; Hasegawa, R.; Nunes, M.G.V. (2002). Curupira: um Parser Funcional para o Português. Relatório Técnico do NILC, NILC-TR-02-26. São Carlos, Dezembro, 43p."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[18]\tMiller, G.A.; Beckwith, R.; Fellbaum, C.; Gross, D.; Miller, K. (1993). Introduction to WordNet: An On-line Lexical Database. [ftp://www.cogsci.princeton.edu/pub/wordnet/ 5papers.ps]. Abril/2003."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[19]\tMódolo, M. (2003). SuPor: an Environment for Exploration of Extractive Methods for Automatic Text Summarization for Portuguese (in Portuguese). MSc. Dissertation. Departamento de Computação, UFSCar."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[20]\tNunes, M.G.V.; Vieira, F.M.C.; Zavaglia, C.; Sossolote, C.R.C.; Hernandez, J. (1996). A Construção de um Léxico da Língua Portuguesa do Brasil para suporte à Correção Automática de Textos. Relatórios Técnicos do ICMC-USP, Nro. 42. Setembro, 36p."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[21]\tOrasan, C.; Mitkov, R.; Hasler, L. (2003). CAST: a Computer-Aided Summarisation Tool. In the Proceedings of the 10th Conference of The European Chapter of the Association for Computational Linguistics (EACL2003), Budapest, Hungary."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[22]\tPardo, T.A.S.; Rino, L.H.M.; Nunes, M.G.V. (2003a). GistSumm: A Summarization Tool Based on a New Extractive Method. In N.J. Mamede, J. Baptista, I. Trancoso, M.G.V. Nunes (eds.), 6th Workshop on Computational Processing of the Portuguese Language - Written and Spoken, pp. 210-218 (Lecture Notes in Artificial Intelligence 2721). Springer-Verlag, Germany."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[23]\tPardo, T.A.S; Rino, L.H.M.; Nunes, M.G.V. (2003b). NeuralSumm: A Connexionist Approach to Automatic Text Summarization (in Portuguese). In Anais do IV Encontro Nacional de Inteligência Artificial – ENIA’2003. XXII Cong. Nac.da SBC. Campinas – SP."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[24]\tPardo, T.A.S. e Rino, L.H.M. (2003). TeMário: A Corpus for Automatic Text Summarization (in Portuguese). NILC Tech. Report. NILC-TR-03-09. São Carlos, Outubro, 12p."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[25]\tPorter, M. F. (1980). An Algorithm for Suffix Stripping. Program, 14 (3), pp 130-137, July."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[26]\tRadev, D.; Teufel, S.; Saggion, H.; Lam, W.; Blitzer, J.; Qi, H.; Çelebi, A.; Liu, D.; Drabek, E. (2003). Evaluation challenges in large-scale document summarization. In the Proc. of the 41st Annual Meeting of the Association for Computational Linguistics, pp. 375-382. July."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[27]\tRatnaparkhi, A. (1996). A Maximum Entropy Part-Of-Speech Tagger. In Proceedings of the Empirical Methods in Natural Language Processing Conference, May 17-18. University of Pennsylvania, USA."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[28]\tRino, L.H.M.; Pardo, T.A.S; Silla Jr., C.N.; Kaestner, C.A.; Pombo, M. A Comparison of Automatic Summarization Systems for Brazilian Portuguese Texts. XVII Brazilian Symposium on Artificial Intelligence - SBIA'04. September 29-October 1. São Luís, Maranhão, Brazil."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[29]\tSalton, G.; Singhal, A.; Mitra, M.; Buckley, C. (1997). Automatic Text Structuring and Summarization. Information Processing \u0026 Management 33(2), pp. 193-207."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[30]\tSalton, G.; Buckley, C. (1988). Term-weighting approaches in automatic text retrieval. Information Processing \u0026 Management 24, 513-523. 1988. Reprinted in: K. Sparck-Jones; P. Willet (eds.), Readings in Information Retrieval, pp. 323-328. Morgan Kaufmann. 1997."
+                },
+                {
+                    "kind": "Paragraph",
+                    "content": "[31]\tTeufel, S.; Moens, M. (1999). Argumentative Classification of Extracted Sentences as a First Step Towards Flexible Abstracting. In Inderjeet Mani and Mark T. Maybury (Eds.), Advances in Automatic Text Summarization, pp. 155-175. MIT Press, Cambridge, MA."
+                }
+            ]
+        }
+    ]
+}

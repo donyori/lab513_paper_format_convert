@@ -9,8 +9,12 @@ type DocumentModel struct {
 	root   *DocumentTreeNode
 }
 
-var ErrDocumentTreeNodeKindNotDocument error = errors.New(
-	"DocumentTreeNode's kind is not Document")
+var (
+	ErrNilDocumentModel error = errors.New(
+		"DocumentModel is nil")
+	ErrDocumentTreeNodeKindNotDocument error = errors.New(
+		"DocumentTreeNode's kind is not Document")
+)
 
 func NewDocumentModel(number int32, root *DocumentTreeNode) (
 	docModel *DocumentModel, err error) {

@@ -4,17 +4,17 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
 
+	"github.com/donyori/lab513_paper_format_convert/fnp"
 	"github.com/donyori/lab513_paper_format_convert/model"
 )
 
 func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
-	doesTrimSpace bool) (documentRoot *model.DocumentTreeNode, err error) {
+	doesTrimSpace bool) (docModel *model.DocumentModel, err error) {
 	defer func() {
 		if panicErr := recover(); panicErr != nil {
-			documentRoot = nil
+			docModel = nil
 			if e, ok := panicErr.(error); ok {
 				err = e
 			} else {
@@ -25,37 +25,8 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 	if taggedTextInfo == nil {
 		taggedTextInfo = DefaultTaggedTextInfo
 	}
-	titleFromFilename := ""
-	if taggedTextInfo.FilenamePattern != nil {
-		filenameInfo, err := taggedTextInfo.FilenamePattern.Parse(filename)
-		if err != nil {
-			return nil, err
-		}
-		v := reflect.ValueOf(filenameInfo)
-		for v.Kind() == reflect.Ptr {
-			v = v.Elem()
-		}
-		switch v.Kind() {
-		case reflect.Struct:
-			v = v.FieldByName("Title")
-			if v.IsValid() {
-				titleFromFilename = v.String()
-			}
-		case reflect.Map:
-			keys := v.MapKeys()
-			if len(keys) > 0 {
-				for _, k := range keys {
-					if strings.EqualFold(k.String(), "Title") {
-						v = v.MapIndex(k)
-						if v.IsValid() {
-							titleFromFilename = v.String()
-						}
-						break
-					}
-				}
-			}
-		}
-	}
+	numberFromFilename, titleFromFilename, _ := parseFilename(
+		filename, taggedTextInfo.FilenamePattern)
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -164,5 +135,29 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 	if err != nil {
 		return nil, err
 	}
-	return root, nil
+	docModel, err = model.NewDocumentModel(numberFromFilename, root)
+	if err != nil {
+		return nil, err
+	}
+	return docModel, nil
+}
+
+func parseFilename(filename string, filenamePattern fnp.FilenamePattern) (
+	number int32, title string, ok bool) {
+	if filenamePattern == nil {
+		return 0, "", false
+	}
+	info, err := filenamePattern.Parse(filename)
+	if err != nil {
+		return 0, "", false
+	}
+	n, isSupported := info.Number()
+	if isSupported {
+		number = n
+	}
+	t, isSupported := info.Title()
+	if isSupported {
+		title = t
+	}
+	return number, title, true
 }
