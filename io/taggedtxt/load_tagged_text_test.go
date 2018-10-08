@@ -34,6 +34,16 @@ func TestLoadTaggedTextFile(t *testing.T) {
 			NewTaggedTextInfo(
 				fnp.NewFilenamePatternNoRangeTitleTxt(), true, "", ""),
 		},
+		{
+			"136.A neural attention model for abstractive sentence summarization.txt",
+			NewTaggedTextInfo(
+				fnp.NewFilenamePatternNoRangeTitleTxt(), true, "", ""),
+		},
+		{
+			"174.Image collection summarization via dictionary learning for sparse representation.txt",
+			NewTaggedTextInfo(
+				fnp.NewFilenamePatternNoRangeTitleTxt(), true, "", ""),
+		},
 	}
 	for i, c := range cases {
 		f := filepath.Join(dir, c.Filename)

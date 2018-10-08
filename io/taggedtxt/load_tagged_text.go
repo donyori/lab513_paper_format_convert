@@ -63,7 +63,7 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 		}
 		if strings.HasPrefix(line, taggedTextInfo.ChapterStartTag) {
 			level := 0
-			for i := startTagLength; i < len(line); i += startTagLength {
+			for i := startTagLength; i <= len(line); i += startTagLength {
 				if line[i-startTagLength:i] != taggedTextInfo.ChapterStartTag {
 					break
 				}
@@ -107,7 +107,7 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 			depth = level
 		} else if strings.HasPrefix(line, taggedTextInfo.ChapterEndTag) {
 			level := 0
-			for i := endTagLength; i < len(line); i += endTagLength {
+			for i := endTagLength; i <= len(line); i += endTagLength {
 				if line[i-endTagLength:i] != taggedTextInfo.ChapterEndTag {
 					break
 				}
@@ -119,7 +119,7 @@ func LoadTaggedTextFile(filename string, taggedTextInfo *TaggedTextInfo,
 					return nil, model.ErrNilDocumentTreeNode
 				}
 			}
-			depth = level
+			depth = level - 1
 		} else {
 			node, err := model.NewDocumentTreeNode(model.Paragraph, line)
 			if err != nil {
